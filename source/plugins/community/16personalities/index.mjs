@@ -55,7 +55,7 @@ export default async function({login, q, imports, data, account}, {enabled = fal
 
       return {
         //Type extraction
-        type: getInnerText(".type__code"),
+        type: getInnerText(".code"),
 
         //Personality details extraction
         personality: [...document.querySelectorAll(".slider__slides > div")].map(card => {
