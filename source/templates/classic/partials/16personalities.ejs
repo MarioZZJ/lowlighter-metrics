@@ -14,14 +14,34 @@
         </section>
       </div>
     <% } else { %>
-      <% if ((plugins["16personalities"].sections.includes("personality"))||(plugins["16personalities"].sections.includes("profile"))) { %>
+      <!-- Render Personality if the 'personality' section is enabled -->
+      <% if (plugins["16personalities"].sections.includes("personality") || plugins["16personalities"].sections.includes("profile")) { %>
         <div class="row fill-width">
           <section class="personality-traits categories">
-            <% for (const {category, value, image, text} of plugins["16personalities"].personality) { if (((!plugins["16personalities"].sections.includes("personality"))&&(/personality/i.test(category)))||((!plugins["16personalities"].sections.includes("profile"))&&(!/personality/i.test(category)))) continue %>
+            <% for (const {category, value, image, text} of plugins["16personalities"].personality) { %>
+              <% 
+                // Conditional check to filter categories if needed
+                if (
+                  (!plugins["16personalities"].sections.includes("personality") && /personality/i.test(category)) ||
+                  (!plugins["16personalities"].sections.includes("profile") && !/personality/i.test(category))
+                ) continue;
+              %>
               <div class="category">
-                <img src="<%= image %>" alt="" />
+                <!-- Render SVG or Image based on content -->
+                <% if (image.startsWith('<svg')) { %>
+                  <!-- SVG handling -->
+                  <div class="svg-container" style="width: 50px; height: 50px;">
+                    <img src="<%= image %>" alt="<%= category %>" />
+                  </div>
+                <% } else { %>
+                  <!-- Fallback for other images -->
+                  <img src="<%= image %>" alt="<%= category %>" />
+                <% } %>
+
                 <div class="explanation">
-                  <span class="title" style="color: <%= plugins["16personalities"].color %>;"><span class="subtitle"><%= value %></span> <%= category.toLocaleLowerCase() %></span>
+                  <span class="title" style="color: <%= plugins["16personalities"].color %>;">
+                    <span class="subtitle"><%= value %></span> <%= category.toLowerCase() %>
+                  </span>
                   <span class="text"><%= text %></span>
                 </div>
               </div>
@@ -29,6 +49,7 @@
           </section>
         </div>
       <% } %>
+      <!-- Render Traits if the 'traits' section is enabled -->
       <% if (plugins["16personalities"].sections.includes("traits")) { %>
         <div class="row fill-width">
           <section class="personality-traits categories">
